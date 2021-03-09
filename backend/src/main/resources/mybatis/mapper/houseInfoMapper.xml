@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssafy.happyhouse.mapper.houseInfo">
+  	
+  	<select id="selectAllHouseInfo" resultType="houseinfo">
+  		select * from houseinfo
+  	</select>
+  	
+  	<select id="selectHouseInfo" parameterType="int" resultType="houseinfo">
+  		select * from houseinfo where aptNo =#{no}
+  	</select>
+  	
+  	<insert id="insertHouseInfo" parameterType="houseinfo">
+  		insert into houseinfo (dong,AptName,code,buildYear,jibun,img) 
+  		values (#{dong}, #{AptName}, #{code}, #{buildYear}, #{jibun}, #{img})
+  	</insert>
+  	
+  	<update id="updateHouseInfo" parameterType="houseinfo">
+  		update houseinfo set jibun = #{jibun} where aptNo =#{no}
+  	</update>
+  	
+  	<delete id="deleteHouseInfo" parameterType="string">
+  		delete from houseinfo where aptname =#{name}
+  	</delete>
+</mapper>

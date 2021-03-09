@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.happyhouse.repo.HouseDealRepo">
+	
+	<!-- housedeal 매핑 -->
+	<resultMap type="housedeal" id="houseDealMap">
+		<result column="no" property="no"/>
+		<result column="aptNo" property="aptNo"/>
+		<result column="dong" property="dong"/>
+		<result column="AptName" property="aptName"/>
+		<result column="code" property="code"/>
+		<result column="dealAmount" property="dealAmount"/>
+		<result column="buildYear" property="buildYear"/>
+		<result column="dealYear" property="dealYear"/>
+		<result column="dealMonth" property="dealMonth"/>
+		<result column="dealDay" property="dealDay"/>
+		<result column="area" property="area"/>
+		<result column="floor" property="floor"/>
+		<result column="jibun" property="jibun"/>
+		<result column="type" property="type"/>
+		<result column="lat" property="lat"/>
+		<result column="lng" property="lng"/>
+		<result column="img" property="img"/>
+	</resultMap>
+	
+	<!-- 전체 검색 -->
+	<select id="selectAll" resultMap="houseDealMap">	
+   		<![CDATA[select * from housedeal where no <= 20]]>
+   		<!-- select * from housedeal --> 	
+	</select>
+	
+	<select id="recentDeal" parameterType="housedeal" resultMap="houseDealMap">
+		select * from housedeal as a
+		join houseinfo as b
+		on a.aptNo = b.aptNo
+		where a.aptNo = #{aptNo} and type = #{type} and area = #{area}
+		order by no desc limit 10
+	</select>
+	
+	<!-- 검색 조건에 맞게 검색  -->
+	<select id="dealBySearch" parameterType="searchinfo" resultMap="houseDealMap">
+		select * from housedeal as a
+		join houseinfo as b
+		on a.aptNo = b.aptNo		
+		where type in
+		<foreach collection="type" item="i" open="(" close=")" separator=",">
+			#{i.value}
+		</foreach>
+		<if test='key == "name" and word != ""'>
+			and b.aptName like concat('%', #{word}, '%')
+		</if>
+		<if test='key =="dong" and word != ""'>
+			and b.dong like concat('%', #{word}, '%')
+		</if>	
+		order by no desc limit #{start}, 20
+	</select>
+	
+	<!-- 전체 거래 건수 반환 -->
+	<select id="dealsCount" parameterType="searchinfo" resultType="Integer">
+		select count(*) from housedeal as a
+		join houseinfo as b
+		on a.aptNo = b.aptNo
+		where type in
+		<foreach collection="type" item="i" open="(" close=")" separator=",">
+			#{i.value}
+		</foreach>
+		<if test='key == "name" and word != ""'>
+			and b.aptName like concat('%', #{word}, '%')
+		</if>
+		<if test='key =="dong" and word != ""'>
+			and b.dong like concat('%', #{word}, '%')
+		</if>	
+	</select>
+	
+	<!-- 거래 번호로 해당 거래 검색 -->
+	<select id="searchNo" parameterType="int" resultMap="houseDealMap">
+		select * from housedeal as a join houseinfo as b on a.aptNo = b.aptNo where no = #{no}
+	</select>
+
+	<!-- 거래 정보 추가 -->
+	<insert id="insert" parameterType="housedeal">
+		insert into housedeal (dong, AptName, code, dealAmount) values (#{dong}, #{aptName}, #{code}, #{dealAmount})
+	</insert>	
+	
+	<!-- 거래 정보 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from housedeal where no = #{no}
+	</delete>
+	
+</mapper>
+

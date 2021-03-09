@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace ="com.ssafy.happyhouse.mapper.Notice">
+ 	<resultMap type="notice" id="noticeBase">
+		<result column="notice_no" property="noticeNo"/>
+		<result column="notice_title" property="noticeTitle"/>
+		<result column="notice_content" property="noticeContent"/>
+		<result column="notice_writer" property="noticeWriter"/>
+		<result column="notice_datetime" property="noticeDatetime"/>
+	</resultMap>
+	
+	<!-- Notice 전체 조회 -->
+	<select id="selectNotice" resultType="notice">
+		select notice_no as noticeNo, 
+			notice_title as noticeTitle, 
+			notice_content as noticeContent, 
+			notice_writer as noticeWriter, 
+			notice_datetime as noticeDatetime
+		from notice_board
+	order by notice_no desc
+	</select>
+	
+	<!-- noticNO에 해당하는 글을 검색 반환 -->
+	<select id="detailNotice" parameterType="int" resultMap="noticeBase">
+		select notice_no, notice_title, notice_content, notice_writer, notice_datetime 
+		from notice_board 
+		where notice_no = #{noticeNo}
+	</select>
+	
+	<!-- 새로운 Notice 게시글을 등록 -->
+	<insert id="writeNotice" parameterType="notice">
+		insert into notice_board(notice_title, notice_content, notice_writer) values(#{noticeTitle}, #{noticeContent}, #{noticeWriter})
+	</insert>
+	
+	<!-- noticeNO에 해당하는 글의 정보를 업데이트 -->
+	<update id="updateNotice" parameterType="notice">
+		update notice_board set		
+			notice_title = #{noticeTitle}, notice_content = #{noticeContent}, notice_writer = #{noticeWriter}
+			where notice_no = #{noticeNo}		
+	</update>
+	
+	<!-- noticeNo에 해당하는 글을 삭제 -->
+	<delete id="deleteNotice" parameterType="int">
+		delete from notice_board where notice_no = #{noticeNo}
+	</delete>
+</mapper>

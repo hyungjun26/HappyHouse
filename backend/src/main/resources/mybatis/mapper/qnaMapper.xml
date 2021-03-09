@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace ="com.ssafy.happyhouse.mapper.QNA">
+ 	<resultMap type="qna" id="qnaBase">
+		<result column="qna_no" property="qnaNo"/>
+		<result column="qna_title" property="qnaTitle"/>
+		<result column="qna_content" property="qnaContent"/>
+		<result column="qna_userid" property="qnaUserid"/>
+		<result column="qna_datetime" property="qnaDatetime"/>
+		<result column="reply_content" property="replyContent"/>
+		<result column="reply_datetime" property="replyDatetime"/>
+		<result column="reply_userid" property="replyUserid"/>	
+	</resultMap>
+	
+	<!-- QnA 전체 조회 -->
+	<select id="selectQnA" resultType="qna">
+		select qna_no as qnaNo, 
+			qna_title as qnaTitle, 
+			qna_content as qnaContent, 
+			qna_userid as qnaUserid, 
+			qna_datetime as qnaDatetime, 
+			reply_content as replyContent, 
+			reply_datetime as replyDatetime, 
+			reply_userid as replyUserid
+		from qna_board
+	order by qna_no desc
+	</select>
+	
+	<!-- qnaNO에 해당하는 글을 검색 반환 -->
+	<select id="detailQnA" parameterType="int" resultMap="qnaBase">
+		select qna_no, qna_title, qna_content, qna_userid, qna_datetime, reply_content, reply_datetime, reply_userid 
+		from qna_board 
+		where qna_no = #{qnaNo}
+	</select>
+	
+	<!-- 새로운 QnA 게시글을 등록 -->
+	<insert id="writeQnA" parameterType="qna">
+		insert into qna_board(qna_title, qna_content, qna_userid) values(#{qnaTitle}, #{qnaContent}, #{qnaUserid})
+	</insert>
+	
+	<!-- qnaNO에 해당하는 글의 정보를 업데이트 -->
+	<update id="updateQnA" parameterType="qna">
+		update qna_board set
+		<choose>
+			<!-- 답변일때 -->
+			<when test="replyContent != null and replyContent != ''">
+				reply_content = #{replyContent}, reply_userid = #{replyUserid}, reply_datetime = CURRENT_TIMESTAMP
+				where qna_no = #{qnaNo}
+			</when>
+			<otherwise>
+				qna_title = #{qnaTitle}, qna_content = #{qnaContent}, qna_userid = #{qnaUserid}
+				where qna_no = #{qnaNo}
+			</otherwise>
+		</choose>		
+	</update>
+	
+	<!-- qnaNo에 해당하는 글을 삭제 -->
+	<delete id="deleteQnA" parameterType="int">
+		delete from qna_board where qna_no = #{qnaNo}
+	</delete>
+</mapper>

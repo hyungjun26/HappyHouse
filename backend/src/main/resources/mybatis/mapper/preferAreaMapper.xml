@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace ="com.ssafy.happyhouse.mapper.PreferArea">
+ 	<resultMap type="preferarea" id="preferBase">
+		<result column="prefer_no" property="preferNo"/>
+		<result column="puser_id" property="puserId"/>
+		<result column="sido_name" property="sidoName"/>
+		<result column="gugun_name" property="gugunName"/>
+		<result column="dong_name" property="dongName"/>
+	</resultMap>
+	
+	<!-- 해당 유저의 선호지역 조회 -->
+	<select id="selectPrefer" parameterType="string" resultType="preferarea">
+		select 
+			prefer_no as preferNo,
+			sido_name as sidoName, 
+			gugun_name as gugunName, 
+			dong_name as dongName,
+			puser_id as puserId
+		from prefer_area
+		where puser_id =#{puserId}
+	order by prefer_no asc
+	</select>
+	
+	<!-- 새로운 선호 지역을 등록 -->
+	<insert id="insertPrefer" parameterType="preferarea">
+		insert into prefer_area(puser_id, sido_name, gugun_name, dong_name) values(#{puserId}, #{sidoName}, #{gugunName}, #{dongName})
+	</insert>
+	
+	<!-- preferNO에 해당하는 선호 지역을 업데이트 -->
+	<update id="updatePrefer" parameterType="preferarea">
+		update prefer_area set
+			sido_name = #{sidoName}, gugun_name = #{gugunName}, dong_name = #{dongName}
+			where prefer_no = #{preferNo}
+				
+	</update>
+	
+	<!-- preferNo에 해당하는 선호 지역을 삭제 -->
+	<delete id="deletePrefer" parameterType="int">
+		delete from prefer_area where prefer_no = #{preferNo}
+	</delete>
+	
+	
+</mapper>
