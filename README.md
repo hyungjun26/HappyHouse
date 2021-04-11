@@ -22,4 +22,13 @@
 * 부동산 매물의 정보를 명확하게 보여줄 수 있어야 한다.
 * 사용자가 원하는 지역의 매물을 효과적으로 보여줄 수 있어야 한다.
 
+## 서비스 이미지
+* 메인화면
+![ERD](./images/main.png)
+* 부동산 검색
+![ERD](./images/search.png)
+* 상세정보
+![ERD](./images/detail.png)
+
 ## ERD
+![ERD](./images/ERD.jpg)
