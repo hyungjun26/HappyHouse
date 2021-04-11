@@ -6,7 +6,7 @@
 
 - [서비스 목표](#서비스-목표)
 
-- [REST API Reference](#rest-api-reference)
+- [서비스 이미지](#서비스-이미지)
 
 - [ERD](#erd)
 
